@@ -9,7 +9,7 @@ interface FooterProps {
 
 const Footer = (props: FooterProps) => {
   return (
-    <footer className="bg-cyan-500 text-white dark:text-white py-12 px-2 mt-10">
+    <footer className="bg-blue-700 text-white dark:text-white py-12 px-2">
       <div className="flex flex-col md:grid grid-rows-3 md:grid-rows-1 md:grid-cols-2 gap-4 mx-[10%]">
         {/* Footer Name */}
         <div className="text-center md:text-left">

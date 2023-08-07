@@ -21,7 +21,7 @@ const NavBar = (props: NavBarProps) => {
       {/* Mobile Menu */}
       <nav className="py-3 md:py-6 px-4 md:px-8 flex items-center md:text-xl">
         <a
-          className="hover:text-amber-500 font-bold md:text-2xl md:ml-4 flex items-center gap-2"
+          className="text-blue-700 hover:text-blue-300 dark:text-blue-700 dark:hover:text-white font-bold md:text-2xl md:ml-4 flex items-center gap-2"
           href="/"
         >
           <Icon icon="ic:sharp-rocket-launch" className="md:text-4xl" />
@@ -39,7 +39,7 @@ const NavBar = (props: NavBarProps) => {
             {props.links.map((link, index) => (
               <li key={index} className="p-2 md:py-0">
                 <a
-                  className="hover:text-amber-500 flex flex-col items-center justify-center"
+                  className="hover:text-blue-700 flex flex-col items-center justify-center"
                   href={link.href}
                 >
                   <Icon icon={link.icon} className="md:hidden" />
@@ -48,7 +48,7 @@ const NavBar = (props: NavBarProps) => {
               </li>
             ))}
           </ul>
-          <div className="w-full hover:text-amber-500 flex justify-end md:hidden">
+          <div className="w-full hover:text-blue-700 flex justify-end md:hidden">
             <button
               className="p-2 mr-2 mb-2"
               onClick={() => {
@@ -66,7 +66,7 @@ const NavBar = (props: NavBarProps) => {
 
         {/* Theme toggle */}
         <button
-          className="ml-auto md:ml-8 p-2 text-lg hover:text-amber-500"
+          className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700"
           onClick={() => props.toggleDarkMode()}
           aria-label="Toggle dark mode"
         >
@@ -75,7 +75,7 @@ const NavBar = (props: NavBarProps) => {
 
         {/* Mobile Menu button */}
         <button
-          className="md:hidden mx-4 text-lg hover:text-amber-500"
+          className="md:hidden mx-4 text-lg hover:text-blue-700"
           onClick={() => {
             setMobileMenuHidden((prev) => !prev);
           }}

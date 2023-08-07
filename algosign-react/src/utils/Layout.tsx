@@ -22,7 +22,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div className={darkMode ? "dark" : ""}>
       <div className="bg-white text-black dark:bg-[#212121] dark:text-white md:mt-0 relative text-xl">
         <NavBar
-          title="AlgoSign"
+          title="AlgoSignal"
           links={[
             {
               name: "Home",
@@ -30,36 +30,28 @@ const Layout = ({ children }: LayoutProps) => {
               icon: "ant-design:home-outlined",
             },
             {
-              name: "Features",
-              href: "/#features",
+              name: "Login",
+              href: "/user/login",
               icon: "bi:gear-fill",
             },
             {
-              name: "Tools",
-              href: "/#tools",
+              name: "Register",
+              href: "/user/register",
+              icon: "bi:gear-fill",
+            },
+            {
+              name: "Events",
+              href: "/events",
               icon: "carbon:tools",
             },
           ]}
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
         />
-        <div className="min-h-screen md:mt-20">{children && children}</div>
-        {/* <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route
-                  path="/merge"
-                  element={
-                    <Suspense fallback={<LoadingPage />}>
-                      <MergePage />
-                    </Suspense>
-                  }
-                />
-                <Route path="*" element={<Page404 />} />
-              </Routes>
-            </BrowserRouter> */}
+        <div className="md:mt-20"></div>
+        <div className="min-h-screen">{children && children}</div>
         <Footer
-          name="AlgoSign"
+          name="AlgoSignal"
           subtitle="Auth assignment with JWT"
           links={[
             {
