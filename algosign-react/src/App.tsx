@@ -1,8 +1,12 @@
+import Layout from "./utils/Layout";
+
 const App = () => {
   return (
-    <div>
-      <h1>AlgoSign</h1>
-    </div>
+    <Layout>
+      <div>
+        <h1>AlgoSign</h1>
+      </div>
+    </Layout>
   );
 };
 
