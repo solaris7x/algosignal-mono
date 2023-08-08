@@ -1,15 +1,18 @@
 import { ReactNode, useState } from "react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import { UserInfo } from "../App";
 
 interface LayoutProps {
   children?: ReactNode;
+  userInfo: UserInfo | null;
+  setUserInfo: (userInfo: UserInfo | null) => void;
 }
 
 /**
  * Default layout for the application
  */
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children, userInfo, setUserInfo }: LayoutProps) => {
   // DARK: setup
   const [darkMode, setDarkMode] = useState(true);
 
@@ -23,6 +26,8 @@ const Layout = ({ children }: LayoutProps) => {
       <div className="bg-white text-black dark:bg-[#212121] dark:text-white md:mt-0 relative text-xl">
         <NavBar
           title="AlgoSignal"
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
           links={[
             {
               name: "Home",
@@ -33,16 +38,6 @@ const Layout = ({ children }: LayoutProps) => {
               name: "Events",
               href: "/events",
               icon: "carbon:tools",
-            },
-            {
-              name: "Login",
-              href: "/user/login",
-              icon: "bi:gear-fill",
-            },
-            {
-              name: "Register",
-              href: "/user/register",
-              icon: "bi:gear-fill",
             },
           ]}
           darkMode={darkMode}
@@ -59,12 +54,8 @@ const Layout = ({ children }: LayoutProps) => {
               href: "/",
             },
             {
-              name: "Features",
-              href: "/#features",
-            },
-            {
-              name: "Tools",
-              href: "/#tools",
+              name: "Github",
+              href: "https://github.com/solaris7x",
             },
           ]}
         />

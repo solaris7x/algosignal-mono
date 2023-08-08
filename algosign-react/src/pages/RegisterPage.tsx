@@ -2,8 +2,13 @@ import { useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import hashSHA256 from "../helperFunctions/hashSHA256";
 import { useNavigate } from "react-router-dom";
+import { UserInfo } from "../App";
 
-const RegisterPage = () => {
+export interface RegisterPageProps {
+  setUserInfo: (userInfo: UserInfo) => void;
+}
+
+const RegisterPage = (props: RegisterPageProps) => {
   // Form state
   const [loadingState, setLoadingState] = useState(false);
   const [messageState, setMessageState] = useState<string | null>(null);
@@ -64,6 +69,11 @@ const RegisterPage = () => {
           setMessageState(
             "User registered successfully 🎉 Redirecting to Home"
           );
+          // Set user info
+          props.setUserInfo({
+            username: resData.username,
+            email: resData.email,
+          });
           // Redirect to login page
           setTimeout(() => {
             console.log("Redirecting now");

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -8,27 +9,47 @@ import LoginPage from "./pages/LoginPage";
 import EventListPage from "./pages/EventListPage";
 import EventPage from "./pages/EventPage";
 import NewEventPage from "./pages/NewEventPage";
+import ProtectedPageHOC from "./pages/ProtectedPageHOC";
+
+export interface UserInfo {
+  username: string;
+  email: string;
+}
 
 const App = () => {
+  // Auth state
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
+  console.log(userInfo);
+
   return (
-    <Layout>
-      <BrowserRouter>
+    <BrowserRouter>
+      <Layout userInfo={userInfo} setUserInfo={setUserInfo}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/user">
-            <Route path="" element={<RegisterPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="login" element={<LoginPage />} />
+            <Route path="" element={<LoginPage setUserInfo={setUserInfo} />} />
+            <Route
+              path="register"
+              element={<RegisterPage setUserInfo={setUserInfo} />}
+            />
+            <Route
+              path="login"
+              element={<LoginPage setUserInfo={setUserInfo} />}
+            />
           </Route>
-          <Route path="/events">
+          <Route
+            path="/events"
+            element={<ProtectedPageHOC userInfo={userInfo} />}
+          >
             <Route path="" element={<EventListPage />} />
             <Route path="id" element={<EventPage />} />
             <Route path="new" element={<NewEventPage />} />
           </Route>
           <Route path="*" element={<Page404 />} />
         </Routes>
-      </BrowserRouter>
-    </Layout>
+      </Layout>
+    </BrowserRouter>
   );
 };
 

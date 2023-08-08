@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import { UserInfo } from "../App";
+import { Link, useNavigate } from "react-router-dom";
 
 interface NavBarProps {
   title: string;
@@ -10,10 +12,13 @@ interface NavBarProps {
   }[];
   darkMode: boolean;
   toggleDarkMode: () => void;
+  userInfo: UserInfo | null;
+  setUserInfo: (userInfo: UserInfo | null) => void;
 }
 
 const NavBar = (props: NavBarProps) => {
   const [mobileMenuHidden, setMobileMenuHidden] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   return (
     // DARK: bg
@@ -38,13 +43,15 @@ const NavBar = (props: NavBarProps) => {
           <ul className="grid grid-cols-3 gap-4 px-6 pt-8 md:flex md:p-0 md:gap-8">
             {props.links.map((link, index) => (
               <li key={index} className="p-2 md:py-0">
-                <a
-                  className="hover:text-blue-700 flex flex-col items-center justify-center"
-                  href={link.href}
-                >
-                  <Icon icon={link.icon} className="md:hidden" />
-                  {link.name}
-                </a>
+                <Link to={link.href}>
+                  <a
+                    className="hover:text-blue-700 flex flex-col items-center justify-center"
+                    // href={link.href}
+                  >
+                    <Icon icon={link.icon} className="md:hidden" />
+                    {link.name}
+                  </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -66,12 +73,67 @@ const NavBar = (props: NavBarProps) => {
 
         {/* Theme toggle */}
         <button
-          className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700"
+          className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700 flex flex-col justify-center items-center"
           onClick={() => props.toggleDarkMode()}
           aria-label="Toggle dark mode"
         >
           <Icon icon={props.darkMode ? "bi:moon" : "bi:sun"} />
         </button>
+
+        {/* Login / Register or Logout*/}
+        {!props.userInfo ? (
+          <>
+            <button
+              className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700"
+              onClick={() => navigate("/user/login")}
+              aria-label="Login"
+            >
+              <Icon icon="ic:baseline-login" />
+              <div className="hidden md:block">Login</div>
+            </button>
+            <button
+              className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700 flex flex-col justify-center items-center"
+              onClick={() => navigate("/user/register")}
+              aria-label="Register"
+            >
+              <Icon icon="mdi:register" />
+              <div className="hidden md:block">Register</div>
+            </button>
+          </>
+        ) : (
+          <button
+            className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700 flex flex-col justify-center items-center"
+            onClick={async () => {
+              try {
+                // Call logout endpoint
+                const response = await fetch(
+                  "http://localhost:3000/user/logout",
+                  {
+                    method: "GET",
+                    credentials: "include",
+                  }
+                );
+
+                // Check if logout was successful
+                if (!response.ok) {
+                  throw new Error(
+                    "Server responded with " + response.status + " status"
+                  );
+                }
+
+                // Clear user info
+                props.setUserInfo(null);
+              } catch (err) {
+                console.error(err);
+                alert("Failed to logout" + err);
+              }
+            }}
+            aria-label="Logout"
+          >
+            <Icon icon="ant-design:logout-outlined" />
+            <div className="hidden md:block">Logout</div>
+          </button>
+        )}
 
         {/* Mobile Menu button */}
         <button

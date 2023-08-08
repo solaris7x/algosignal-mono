@@ -1,6 +1,84 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import hashSHA256 from "../helperFunctions/hashSHA256";
+import { UserInfo } from "../App";
 
-const LoginPage = () => {
+export interface LoginPageProps {
+  setUserInfo: (userInfo: UserInfo) => void;
+}
+
+const LoginPage = (props: LoginPageProps) => {
+  // Form state
+  const [loadingState, setLoadingState] = useState(false);
+  const [messageState, setMessageState] = useState<string | null>(null);
+  const [errorState, setErrorState] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    // Dont refresh page
+    e.preventDefault();
+    // Reset states
+    setLoadingState(true);
+    setErrorState(null);
+    setMessageState(null);
+
+    try {
+      // Setting explicit type for e.target to prevent using external libraries
+      const eTarget = e.target as typeof e.target & {
+        email: { value: string };
+        password: { value: string };
+      };
+
+      // Destructure values for easier access
+      const [email, password] = [eTarget.email.value, eTarget.password.value];
+      // console.log(username, email, password, confirmPassword);
+
+      // Send post request to backend
+      try {
+        const res = await fetch("http://localhost:3000/user/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email,
+            passwordHash: await hashSHA256(password),
+          }),
+        });
+
+        const resData = await res.json();
+        console.log(resData);
+        // If successful, redirect to login page
+        if (res.ok) {
+          setMessageState("User verified successfully 🎉 Redirecting to Home");
+          // Set user info
+          props.setUserInfo({
+            username: resData.username,
+            email: resData.email,
+          });
+          // Redirect to login page
+          setTimeout(() => {
+            console.log("Redirecting now");
+            // window.location.href = "/";
+            navigate("/");
+          }, 2000);
+        } else {
+          // If unsuccessful, display error message
+          setErrorState(resData?.message || "Could not verify user");
+        }
+      } catch (err: any) {
+        // Check for user already exists
+        setErrorState(err?.message || "Could not verify user");
+      }
+    } catch (err) {
+      setErrorState("Could not verify user");
+    } finally {
+      setLoadingState(false);
+    }
+  };
+
   return (
     // User login form
     // Form with username/email, password
@@ -14,17 +92,14 @@ const LoginPage = () => {
             Login
           </h2>
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log(e.target);
-            }}
+            onSubmit={onSubmit}
             className="mt-5 py-6 flex flex-col items-center gap-4"
           >
             <input
               className="p-2 rounded-lg w-full border-2 border-blue-300 hover:border-blue-800"
               type="text"
-              name="username"
-              placeholder="Username"
+              name="email"
+              placeholder="email"
             />
             <input
               className="p-2 rounded-lg w-full border-2 border-blue-300 hover:border-blue-800"
@@ -35,10 +110,24 @@ const LoginPage = () => {
             <button
               type="submit"
               className="w-1/3 bg-blue-500 hover:bg-blue-400 rounded-lg p-2 text-white"
+              disabled={loadingState}
             >
-              Register
+              {
+                // If loading, show spinner
+                loadingState && (
+                  <Icon icon="akar-icons:loading" className="animate-spin" />
+                )
+              }
+              Login
             </button>
           </form>
+          {errorState && (
+            <p className="text-red-500 text-center">{errorState}</p>
+          )}
+
+          {messageState && (
+            <p className="text-green-500 text-center">{messageState}</p>
+          )}
         </div>
       </div>
     </div>

@@ -63,6 +63,8 @@ userRouter.post("/register", async (req, res) => {
 
         return res.status(200).json({
             message: "User registered successfully",
+            username,
+            email,
         });
     } catch (err) {
         console.error(err);
@@ -112,7 +114,11 @@ userRouter.post("/login", async (req, res) => {
             maxAge: 43200, // 12 hours same as JWT expiry
         });
 
-        return res.json({ message: "User logged in successfully" });
+        return res.json({
+            message: "User logged in successfully",
+            username: userInfo.username,
+            email: userInfo.email,
+        });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Something went wrong" });
@@ -120,6 +126,19 @@ userRouter.post("/login", async (req, res) => {
 });
 
 userRouter.post("/logout", async (req, res) => {
+    try {
+        // Clear the cookie
+        res.clearCookie("token");
+
+        return res.json({ message: "User logged out successfully" });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Something went wrong" });
+    }
+});
+
+// Logout route
+userRouter.get("/logout", async (req, res) => {
     try {
         // Clear the cookie
         res.clearCookie("token");
