@@ -6,6 +6,8 @@ import Page404 from "./utils/Page404";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import EventListPage from "./pages/EventListPage";
+import EventPage from "./pages/EventPage";
+import NewEventPage from "./pages/NewEventPage";
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
           </Route>
           <Route path="/events">
             <Route path="" element={<EventListPage />} />
+            <Route path="id" element={<EventPage />} />
+            <Route path="new" element={<NewEventPage />} />
           </Route>
           <Route path="*" element={<Page404 />} />
         </Routes>
