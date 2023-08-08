@@ -1,4 +1,6 @@
 import express from "express";
+import * as jose from "jose";
+
 import { hasAllProperties } from "../functions/hasAllProperties.js";
 import EventModel from "../models/eventModel.js";
 
@@ -10,6 +12,34 @@ export interface EventType {
     date: Date;
     body: string;
 }
+
+// JWT auth middleware
+eventRouter.use(async (req, res, next) => {
+    try {
+        // Get the JWT token from request header cookie
+        const token = req.cookies["token"];
+
+        // Validate the JWT token
+        if (!token) {
+            throw new Error("No JWT token found");
+        }
+
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        const alg = "HS256";
+
+        const _jwtToken = await jose.jwtVerify(token, secret, {
+            algorithms: [alg],
+            issuer: "algosign",
+        });
+
+        return next();
+    } catch (error) {
+        console.error(error);
+        return res.status(401).json({
+            message: "Unauthorized",
+        });
+    }
+});
 
 eventRouter.post("/new", async (req, res) => {
     try {

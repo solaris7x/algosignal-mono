@@ -28,7 +28,14 @@ const App = () => {
       setUserInfo(null);
       return;
     }
-    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+    localStorage.setItem(
+      "userInfo",
+      JSON.stringify({
+        ...userInfo,
+        expireAt:
+          Date.now() + parseInt(import.meta.env.VITE_JWT_EXPIRY || "43200000"),
+      })
+    );
     setUserInfo(userInfo);
   };
 
@@ -37,9 +44,17 @@ const App = () => {
   // Persist auth state with local storage
   useEffect(() => {
     if (!userInfo) {
-      const localUserInfo = localStorage.getItem("userInfo");
-      if (localUserInfo) {
-        setUserInfoWithLocalStorage(JSON.parse(localUserInfo));
+      const localUserInfowithExpiry = localStorage.getItem("userInfo");
+      if (localUserInfowithExpiry) {
+        const { expireAt, ...localUserInfo } = JSON.parse(
+          localUserInfowithExpiry
+        );
+        if (Date.now() > expireAt) {
+          localStorage.removeItem("userInfo");
+          setUserInfo(null);
+          return;
+        }
+        setUserInfoWithLocalStorage(localUserInfo);
       }
     }
   }, [userInfo]);
