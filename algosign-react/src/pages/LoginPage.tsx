@@ -35,52 +35,45 @@ const LoginPage = (props: LoginPageProps) => {
       // console.log(username, email, password, confirmPassword);
 
       // Send post request to backend
-      try {
-        const res = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
-          }/user/login`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              email,
-              passwordHash: await hashSHA256(password),
-            }),
-          }
-        );
-
-        const resData = await res.json();
-        console.log(resData);
-        // If successful, redirect to login page
-        if (res.ok) {
-          setMessageState(
-            "User verified successfully 🎉 Redirecting to Events"
-          );
-          // Set user info
-          props.setUserInfo({
-            username: resData.username,
-            email: resData.email,
-          });
-          // Redirect to login page
-          setTimeout(() => {
-            console.log("Redirecting now");
-            // window.location.href = "/";
-            navigate("/events");
-          }, 2000);
-        } else {
-          // If unsuccessful, display error message
-          setErrorState(resData?.message || "Could not verify user");
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
+        }/user/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email,
+            passwordHash: await hashSHA256(password),
+          }),
         }
-      } catch (err: any) {
-        // Check for user already exists
-        setErrorState(err?.message || "Could not verify user");
+      );
+
+      const resData = await res.json();
+      console.log(resData);
+      // If successful, redirect to login page
+      if (res.ok) {
+        setMessageState("User verified successfully 🎉 Redirecting to Events");
+        // Set user info
+        props.setUserInfo({
+          username: resData.username,
+          email: resData.email,
+        });
+        // Redirect to login page
+        setTimeout(() => {
+          console.log("Redirecting now");
+          // window.location.href = "/";
+          navigate("/events");
+        }, 2000);
+      } else {
+        // If unsuccessful, display error message
+        throw new Error(resData?.message || "Could not verify user");
       }
-    } catch (err) {
-      setErrorState("Could not verify user");
+    } catch (err: any) {
+      setErrorState(err?.message || "Could not verify user");
     } finally {
       setLoadingState(false);
     }

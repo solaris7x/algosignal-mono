@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -21,22 +21,48 @@ const App = () => {
   // Auth state
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
+  const setUserInfoWithLocalStorage = (userInfo: UserInfo | null) => {
+    // TODO: Check expiry
+    if (userInfo === null) {
+      localStorage.removeItem("userInfo");
+      setUserInfo(null);
+      return;
+    }
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+    setUserInfo(userInfo);
+  };
+
   console.log(userInfo);
+
+  // Persist auth state with local storage
+  useEffect(() => {
+    if (!userInfo) {
+      const localUserInfo = localStorage.getItem("userInfo");
+      if (localUserInfo) {
+        setUserInfoWithLocalStorage(JSON.parse(localUserInfo));
+      }
+    }
+  }, [userInfo]);
 
   return (
     <BrowserRouter>
-      <Layout userInfo={userInfo} setUserInfo={setUserInfo}>
+      <Layout userInfo={userInfo} setUserInfo={setUserInfoWithLocalStorage}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/user">
-            <Route path="" element={<LoginPage setUserInfo={setUserInfo} />} />
+            <Route
+              path=""
+              element={<LoginPage setUserInfo={setUserInfoWithLocalStorage} />}
+            />
             <Route
               path="register"
-              element={<RegisterPage setUserInfo={setUserInfo} />}
+              element={
+                <RegisterPage setUserInfo={setUserInfoWithLocalStorage} />
+              }
             />
             <Route
               path="login"
-              element={<LoginPage setUserInfo={setUserInfo} />}
+              element={<LoginPage setUserInfo={setUserInfoWithLocalStorage} />}
             />
             <Route
               path="updatePassword"
@@ -44,7 +70,7 @@ const App = () => {
                 <ProtectedPageHOC userInfo={userInfo}>
                   <UpdatePasswordPage
                     userInfo={userInfo!}
-                    setUserInfo={setUserInfo}
+                    setUserInfo={setUserInfoWithLocalStorage}
                   />
                 </ProtectedPageHOC>
               }
@@ -55,8 +81,8 @@ const App = () => {
             element={<ProtectedPageHOC userInfo={userInfo} />}
           >
             <Route path="" element={<EventListPage />} />
-            <Route path="id" element={<EventPage />} />
-            <Route path="new" element={<NewEventPage />} />
+            <Route path=":eventId" element={<EventPage />} />
+            <Route path="new" element={<NewEventPage userInfo={userInfo!} />} />
           </Route>
           <Route path="*" element={<Page404 />} />
         </Routes>

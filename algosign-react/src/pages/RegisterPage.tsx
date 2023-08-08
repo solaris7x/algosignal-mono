@@ -26,7 +26,6 @@ const RegisterPage = (props: RegisterPageProps) => {
     try {
       // Setting explicit type for e.target to prevent using external libraries
       const eTarget = e.target as typeof e.target & {
-        username: { value: string };
         email: { value: string };
         password: { value: string };
         confirmPassword: { value: string };
@@ -34,7 +33,7 @@ const RegisterPage = (props: RegisterPageProps) => {
 
       // Destructure values for easier access
       const [username, email, password, confirmPassword] = [
-        eTarget.username.value,
+        eTarget.email.value.split("@")[0],
         eTarget.email.value,
         eTarget.password.value,
         eTarget.confirmPassword.value,
@@ -48,53 +47,48 @@ const RegisterPage = (props: RegisterPageProps) => {
       }
 
       // Send post request to backend
-      try {
-        const res = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
-          }/user/register`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              username,
-              email,
-              passwordHash: await hashSHA256(password),
-            }),
-          }
-        );
-
-        const resData = await res.json();
-        console.log(resData);
-        // If successful, redirect to login page
-        if (res.ok) {
-          setMessageState(
-            "User registered successfully 🎉 Redirecting to Events"
-          );
-          // Set user info
-          props.setUserInfo({
-            username: resData.username,
-            email: resData.email,
-          });
-          // Redirect to login page
-          setTimeout(() => {
-            console.log("Redirecting now");
-            // window.location.href = "/";
-            navigate("/events");
-          }, 2000);
-        } else {
-          // If unsuccessful, display error message
-          setErrorState(resData?.message || "Could not register user");
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
+        }/user/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            username,
+            email,
+            passwordHash: await hashSHA256(password),
+          }),
         }
-      } catch (err: any) {
-        // Check for user already exists
-        setErrorState(err?.message || "Could not register user");
+      );
+
+      const resData = await res.json();
+      console.log(resData);
+      // If successful, redirect to login page
+      if (res.ok) {
+        setMessageState(
+          "User registered successfully 🎉 Redirecting to Events"
+        );
+        // Set user info
+        props.setUserInfo({
+          username: resData.username,
+          email: resData.email,
+        });
+        // Redirect to login page
+        setTimeout(() => {
+          console.log("Redirecting now");
+          // window.location.href = "/";
+          navigate("/events");
+        }, 2000);
+      } else {
+        // If unsuccessful, display error message
+        throw new Error(resData?.message || "Could not register user");
       }
-    } catch (err) {
-      setErrorState("Could not register user");
+    } catch (err: any) {
+      setErrorState(err?.message || "Could not register user");
     } finally {
       setLoadingState(false);
     }
@@ -116,13 +110,13 @@ const RegisterPage = (props: RegisterPageProps) => {
             onSubmit={onSubmit}
             className="mt-5 py-6 flex flex-col items-center gap-4"
           >
-            <input
+            {/* <input
               className="p-2 rounded-lg w-full border-2 border-blue-300 hover:border-blue-800"
               type="text"
               name="username"
               placeholder="Username"
               required
-            />
+            /> */}
             <input
               className="p-2 rounded-lg w-full border-2 border-blue-300 hover:border-blue-800"
               type="email"

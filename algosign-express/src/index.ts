@@ -5,6 +5,7 @@ import "dotenv/config";
 
 import userRouter from "./components/userRouter.js";
 import mongoose from "mongoose";
+import eventRouter from "./components/eventRouter.js";
 
 const index = async () => {
     try {
@@ -31,11 +32,16 @@ const index = async () => {
         // Parse JSON bodies for this app. Using express built-in middleware
         app.use(express.json());
 
+        // Parse URL-encoded bodies for this app. Using express built-in middleware
+        app.use(express.urlencoded({ extended: true }));
+
         app.get("/", async (req, res) => {
             return res.send("Hello World! from algosign");
         });
 
         app.use("/user", userRouter);
+
+        app.use("/events", eventRouter);
 
         // Catch all other routes
         app.all("*", (req, res) => {

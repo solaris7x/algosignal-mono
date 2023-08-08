@@ -26,11 +26,12 @@ const NavBar = (props: NavBarProps) => {
     <header className="w-full fixed bottom-0 md:bottom-auto md:top-0 bg-white dark:bg-[#212121]">
       {/* Mobile Menu */}
       <nav className="py-3 md:py-6 px-4 md:px-8 flex items-center md:text-xl">
-        <Link to="/">
-          <a className="text-blue-700 hover:text-blue-300 dark:text-blue-700 dark:hover:text-white font-bold md:text-2xl md:ml-4 flex items-center gap-2">
-            <Icon icon="ic:sharp-rocket-launch" className="md:text-4xl" />
-            {props.title}
-          </a>
+        <Link
+          to="/"
+          className="text-blue-700 hover:text-blue-300 dark:text-blue-700 dark:hover:text-white font-bold md:text-2xl md:ml-4 flex items-center gap-2"
+        >
+          <Icon icon="ic:sharp-rocket-launch" className="md:text-4xl" />
+          {props.title}
         </Link>
 
         {/* Menu */}
@@ -43,14 +44,13 @@ const NavBar = (props: NavBarProps) => {
           <ul className="grid grid-cols-3 gap-4 px-6 pt-8 md:flex md:p-0 md:gap-8">
             {props.links.map((link, index) => (
               <li key={index} className="p-2 md:py-0">
-                <Link to={link.href}>
-                  <a
-                    className="hover:text-blue-700 flex flex-col items-center justify-center"
-                    // href={link.href}
-                  >
-                    <Icon icon={link.icon} className="md:hidden" />
-                    {link.name}
-                  </a>
+                <Link
+                  to={link.href}
+                  className="hover:text-blue-700 flex flex-col items-center justify-center"
+                  // href={link.href}
+                >
+                  <Icon icon={link.icon} className="md:hidden" />
+                  {link.name}
                 </Link>
               </li>
             ))}
