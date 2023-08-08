@@ -30,6 +30,11 @@ const Layout = ({ children }: LayoutProps) => {
               icon: "ant-design:home-outlined",
             },
             {
+              name: "Events",
+              href: "/events",
+              icon: "carbon:tools",
+            },
+            {
               name: "Login",
               href: "/user/login",
               icon: "bi:gear-fill",
@@ -38,11 +43,6 @@ const Layout = ({ children }: LayoutProps) => {
               name: "Register",
               href: "/user/register",
               icon: "bi:gear-fill",
-            },
-            {
-              name: "Events",
-              href: "/events",
-              icon: "carbon:tools",
             },
           ]}
           darkMode={darkMode}

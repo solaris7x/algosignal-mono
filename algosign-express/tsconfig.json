@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    // "extends": "@tsconfig/node-lts-strictest-esm/tsconfig.json", // «———— ESM base
+    "compilerOptions": {
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "ESNext",
+        "typeRoots": ["node_modules/@types"],
+        "strict": true,
+        "alwaysStrict": true,
+        // "lib": ["es2018", "dom"],
+        "declaration": true,
+        "sourceMap": true,
+        "outDir": "dist"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.test.ts"],
+    "ts-node": {
+        "esm": true // «———— enabling ESM for ts-node
+    }
+}
