@@ -107,7 +107,9 @@ const NavBar = (props: NavBarProps) => {
               try {
                 // Call logout endpoint
                 const response = await fetch(
-                  "http://localhost:3000/user/logout",
+                  `${
+                    import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
+                  }/user/logout`,
                   {
                     method: "GET",
                     credentials: "include",

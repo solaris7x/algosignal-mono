@@ -137,17 +137,4 @@ userRouter.post("/logout", async (req, res) => {
     }
 });
 
-// Logout route
-userRouter.get("/logout", async (req, res) => {
-    try {
-        // Clear the cookie
-        res.clearCookie("token");
-
-        return res.json({ message: "User logged out successfully" });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Something went wrong" });
-    }
-});
-
 export default userRouter;

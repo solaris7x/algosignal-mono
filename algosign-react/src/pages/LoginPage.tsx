@@ -36,17 +36,22 @@ const LoginPage = (props: LoginPageProps) => {
 
       // Send post request to backend
       try {
-        const res = await fetch("http://localhost:3000/user/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            email,
-            passwordHash: await hashSHA256(password),
-          }),
-        });
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
+          }/user/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              email,
+              passwordHash: await hashSHA256(password),
+            }),
+          }
+        );
 
         const resData = await res.json();
         console.log(resData);

@@ -49,18 +49,23 @@ const RegisterPage = (props: RegisterPageProps) => {
 
       // Send post request to backend
       try {
-        const res = await fetch("http://localhost:3000/user/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            username,
-            email,
-            passwordHash: await hashSHA256(password),
-          }),
-        });
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
+          }/user/register`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              username,
+              email,
+              passwordHash: await hashSHA256(password),
+            }),
+          }
+        );
 
         const resData = await res.json();
         console.log(resData);
