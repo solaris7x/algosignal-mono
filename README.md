@@ -21,6 +21,7 @@ Develop a application which has following:
 - `NodeJS`
 - `ExpressJS`
 - `MongoDB`
+- `Jose JWT`
 
 ### Default ports:
 
@@ -37,13 +38,18 @@ Develop a application which has following:
 - Authenticated Pages
   - Events `/events`
   - Create Event `/events/new`
+  - Event Details `/events/:id`
   - Update Password `/user/updatePassword`
 
 ### Workflow
 
 This project is used to demonstrate use of JWT tokens for authentication of users. The frontend consist of Homepage and auth pages which are publicly accessible to all but also events pages and its nested routes that are only for authenticated users. The same is true for updatePassword route.
 When a user logs in a JWT token is stored as http-only cookie , prevent XSS attacks and also a local state is updated with userInfo. Both are independent by code. As security is best applied in layers, The userInfo state is used by frontend to prevent users from visiting protected pages as 1st layer of security. The JWT token which is not accessible by javascript, is sent by browser for upcoming http request. Thus the backend can verify the user with JWT token cookie.
+The userInfo state is persistent as its stored in localStorage with exipry.
+The UI also has light/dark mode for aesthetics
 
 ### Note:
 
 - When using symmetric key the payload is visible to all but an RSA or public-private key would be an improvement
+- Make a copy of `sample.env` to `.env` for each and substitute relevant values
+- This needs a running mongoDB server
