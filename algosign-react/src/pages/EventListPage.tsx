@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import EventListItem from "../components/home/EventListItem";
 
 const EventListPage = () => {
@@ -11,6 +12,11 @@ const EventListPage = () => {
         </div>
         {/* List of latest 5 Events */}
         <ul className="w-3/4 flex flex-col gap-4 mt-5">
+          <li className="text-xl font-bold text-white bg-blue-700 dark:bg-white dark:text-blue-700 p-2 rounded-lg w-2/3 md:w-1/3 mx-auto">
+            <Link to="new">
+              <a className="">Create new event</a>
+            </Link>
+          </li>
           <EventListItem />
           <EventListItem />
           <EventListItem />

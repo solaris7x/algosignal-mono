@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { UserInfo } from "../App";
 import { Link, useNavigate } from "react-router-dom";
+import logoutUser from "../helperFunctions/logoutUser";
 
 interface NavBarProps {
   title: string;
@@ -25,13 +26,12 @@ const NavBar = (props: NavBarProps) => {
     <header className="w-full fixed bottom-0 md:bottom-auto md:top-0 bg-white dark:bg-[#212121]">
       {/* Mobile Menu */}
       <nav className="py-3 md:py-6 px-4 md:px-8 flex items-center md:text-xl">
-        <a
-          className="text-blue-700 hover:text-blue-300 dark:text-blue-700 dark:hover:text-white font-bold md:text-2xl md:ml-4 flex items-center gap-2"
-          href="/"
-        >
-          <Icon icon="ic:sharp-rocket-launch" className="md:text-4xl" />
-          {props.title}
-        </a>
+        <Link to="/">
+          <a className="text-blue-700 hover:text-blue-300 dark:text-blue-700 dark:hover:text-white font-bold md:text-2xl md:ml-4 flex items-center gap-2">
+            <Icon icon="ic:sharp-rocket-launch" className="md:text-4xl" />
+            {props.title}
+          </a>
+        </Link>
 
         {/* Menu */}
         {/* DARK: bg */}
@@ -101,40 +101,24 @@ const NavBar = (props: NavBarProps) => {
             </button>
           </>
         ) : (
-          <button
-            className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700 flex flex-col justify-center items-center"
-            onClick={async () => {
-              try {
-                // Call logout endpoint
-                const response = await fetch(
-                  `${
-                    import.meta.env.VITE_BACKEND_URL || "http://localhost:3000"
-                  }/user/logout`,
-                  {
-                    method: "GET",
-                    credentials: "include",
-                  }
-                );
-
-                // Check if logout was successful
-                if (!response.ok) {
-                  throw new Error(
-                    "Server responded with " + response.status + " status"
-                  );
-                }
-
-                // Clear user info
-                props.setUserInfo(null);
-              } catch (err) {
-                console.error(err);
-                alert("Failed to logout" + err);
-              }
-            }}
-            aria-label="Logout"
-          >
-            <Icon icon="ant-design:logout-outlined" />
-            <div className="hidden md:block">Logout</div>
-          </button>
+          <>
+            <button
+              className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700 flex flex-col justify-center items-center"
+              onClick={() => navigate("/user/updatePassword")}
+              aria-label="Update Password"
+            >
+              <Icon icon="ic:outline-password" />
+              <div className="hidden md:block">Update Password</div>
+            </button>
+            <button
+              className="ml-auto md:ml-8 p-2 text-lg hover:text-blue-700 flex flex-col justify-center items-center"
+              onClick={() => logoutUser(props.setUserInfo)}
+              aria-label="Logout"
+            >
+              <Icon icon="ant-design:logout-outlined" />
+              <div className="hidden md:block">Logout</div>
+            </button>
+          </>
         )}
 
         {/* Mobile Menu button */}

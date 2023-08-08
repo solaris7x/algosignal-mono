@@ -10,6 +10,7 @@ import EventListPage from "./pages/EventListPage";
 import EventPage from "./pages/EventPage";
 import NewEventPage from "./pages/NewEventPage";
 import ProtectedPageHOC from "./pages/ProtectedPageHOC";
+import UpdatePasswordPage from "./pages/UpdatePasswordPage";
 
 export interface UserInfo {
   username: string;
@@ -36,6 +37,17 @@ const App = () => {
             <Route
               path="login"
               element={<LoginPage setUserInfo={setUserInfo} />}
+            />
+            <Route
+              path="updatePassword"
+              element={
+                <ProtectedPageHOC userInfo={userInfo}>
+                  <UpdatePasswordPage
+                    userInfo={userInfo!}
+                    setUserInfo={setUserInfo}
+                  />
+                </ProtectedPageHOC>
+              }
             />
           </Route>
           <Route

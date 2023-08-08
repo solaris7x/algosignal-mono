@@ -26,45 +26,21 @@ const Home = () => {
           <GridItem
             icon="carbon:flash-filled"
             title="Fast"
-            description="No wait times, no queues, fast and easy"
+            description="Blazingly fast , better than flash for sure"
           />
           <GridItem
             icon="bi:shield-lock-fill"
             title="Secure"
-            description="Your data never leaves your browser"
+            description="We use JWT tokens for secure user authentication"
           />
           <GridItem
             icon="el:fire"
-            title="No Watermark"
-            description="All our services are free to use with no watermark"
+            title="Open Source"
+            description="All our services are free to use and contribute"
           />
         </div>
       </section>
       {/* Tools grid */}
-      <section id="tools" className="p-8">
-        <a href="#tools">
-          <h2 className="text-3xl hover:text-blue-700 flex items-center justify-center gap-2 text-center">
-            <Icon icon="carbon:tools" className="" />
-            Tools
-          </h2>
-        </a>
-        <div className="my-8 mx-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* <Link to="/merge"> */}
-          <GridItem
-            icon="carbon:direction-merge-filled"
-            title="Merge PDF"
-            description="Merge multiple PDFs into one"
-          />
-          {/* </Link> */}
-          {/* <Link to="/"> */}
-          <GridItem
-            icon="gg:reorder"
-            title="Reorder Pages (planned)"
-            description="Reoder pages in a PDF"
-          />
-          {/* </Link> */}
-        </div>
-      </section>
     </div>
   );
 };

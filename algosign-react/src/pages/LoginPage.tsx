@@ -57,7 +57,9 @@ const LoginPage = (props: LoginPageProps) => {
         console.log(resData);
         // If successful, redirect to login page
         if (res.ok) {
-          setMessageState("User verified successfully 🎉 Redirecting to Home");
+          setMessageState(
+            "User verified successfully 🎉 Redirecting to Events"
+          );
           // Set user info
           props.setUserInfo({
             username: resData.username,
@@ -67,7 +69,7 @@ const LoginPage = (props: LoginPageProps) => {
           setTimeout(() => {
             console.log("Redirecting now");
             // window.location.href = "/";
-            navigate("/");
+            navigate("/events");
           }, 2000);
         } else {
           // If unsuccessful, display error message
