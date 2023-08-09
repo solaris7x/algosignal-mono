@@ -4,7 +4,6 @@ import cors from "cors";
 import "dotenv/config";
 
 import userRouter from "./components/userRouter.js";
-import mongoose from "mongoose";
 import eventRouter from "./components/eventRouter.js";
 
 const index = async () => {
@@ -13,10 +12,10 @@ const index = async () => {
         const port = 3000;
 
         // try to connect to DB
-        const connectionString =
-            process.env.ATLAS_URI ||
-            "mongodb+srv://<username>:<password>@cluster0.mongodb.net/algosign?retryWrites=true&w=majority";
-        await mongoose.connect(connectionString);
+        // const connectionString =
+        //     process.env.ATLAS_URI ||
+        //     "mongodb+srv://<username>:<password>@cluster0.mongodb.net/algosign?retryWrites=true&w=majority";
+        // await mongoose.connect(connectionString);
 
         // Handle cors
         app.use(
