@@ -34,7 +34,7 @@ const EventListItem = (
       <button
         className="flex flex-row gap-2 justify-center items-center bg-red-400 p-2 rounded-lg w-1/12"
         onClick={async () => {
-          console.log("Delete post button clicked");
+          // console.log("Delete post button clicked");
           await deleteEvent(props._id);
           await props.fetchEvents();
         }}

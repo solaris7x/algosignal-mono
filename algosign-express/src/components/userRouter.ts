@@ -1,7 +1,7 @@
 // Express js router for user related requests
 import express from "express";
 import * as jose from "jose";
-import UserModel from "../models/userModel.js";
+import Users, { UserModel } from "../models/userModel.js";
 import loginBodyValidator from "../functions/loginBodyValidator.js";
 
 const userRouter = express.Router();
@@ -23,8 +23,8 @@ userRouter.post("/register", async (req, res) => {
         // Get the user data from request body
         const { username, email, passwordHash } = req.body;
 
-        // Check if the user already exists in DB
-        const checkUser = await UserModel.findOne({ email }).exec();
+        // Check if the user already exists in array
+        const checkUser = Users.some((x) => x.email === email);
         if (checkUser) {
             return res.status(409).json({
                 message: "User already exists",
@@ -32,13 +32,13 @@ userRouter.post("/register", async (req, res) => {
         }
 
         // Create the user in DB
-        const newUser = new UserModel({
+        const newUser: UserModel = {
             username,
             email,
             passwordHash,
-        });
+        };
 
-        const _savedUser = await newUser.save();
+        Users.push(newUser);
         // console.log(_savedUser);
 
         // Return the JWT token
@@ -168,13 +168,12 @@ userRouter.post("/updatePassword", async (req, res) => {
             };
         }
 
-        // Update the passwordHash in DB
+        // Update the passwordHash in array
         const { newPasswordHash } = req.body;
-        const _updatedUser = await UserModel.findOneAndUpdate(
-            { email: userInfo.email },
-            { passwordHash: newPasswordHash },
-            { new: true }
-        ).exec();
+        const updateUserIndex = Users.findIndex(
+            (x) => x.email === userInfo.email
+        );
+        Users[updateUserIndex].passwordHash = newPasswordHash;
 
         // console.log(_updatedUser);
 

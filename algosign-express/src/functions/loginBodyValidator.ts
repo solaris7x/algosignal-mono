@@ -1,4 +1,4 @@
-import UserModel from "../models/userModel.js";
+import Users from "../models/userModel.js";
 
 const loginBodyValidator = async (body?: Record<any, any> | null) => {
     // Validate the user data
@@ -12,8 +12,8 @@ const loginBodyValidator = async (body?: Record<any, any> | null) => {
     // Get the user data from request body
     const { email, passwordHash } = body;
 
-    // Check if the user exists in DB
-    const userInfo = await UserModel.findOne({ email }).exec();
+    // Check if the user exists in array
+    const userInfo = Users.find((x) => x.email === email);
     if (!userInfo) {
         throw { message: "User does not exist", status: 401 };
     }

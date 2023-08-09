@@ -2,16 +2,10 @@ import express from "express";
 import * as jose from "jose";
 
 import { hasAllProperties } from "../functions/hasAllProperties.js";
-import EventModel from "../models/eventModel.js";
+import Events, { EventModel } from "../models/eventModel.js";
+import generateSHA256 from "../functions/generateSHA256.js";
 
 const eventRouter = express.Router();
-
-export interface EventType {
-    title: string;
-    author: string;
-    date: Date;
-    body: string;
-}
 
 // JWT auth middleware
 eventRouter.use(async (req, res, next) => {
@@ -32,6 +26,8 @@ eventRouter.use(async (req, res, next) => {
             issuer: "algosign",
         });
 
+        req.body.author = `${_jwtToken.payload.email || token}`;
+
         return next();
     } catch (error) {
         console.error(error);
@@ -46,7 +42,7 @@ eventRouter.post("/new", async (req, res) => {
         // Validate the event data
         if (
             !req.body ||
-            !hasAllProperties<EventType>(req.body, ["title", "date", "body"])
+            !hasAllProperties<EventModel>(req.body, ["title", "date", "body"])
         ) {
             return res.status(400).json({
                 message: "Bad Request",
@@ -54,17 +50,21 @@ eventRouter.post("/new", async (req, res) => {
         }
 
         // Get the event data from request body
-        const { title, date, body } = req.body;
-
-        // TODO: Get author username from JWT token
+        // Get author username from JWT token
+        const { title, date, author, body } = req.body;
 
         // Create the event in DB
-        const _newEvent = await new EventModel({
+        const _newEvent: EventModel = {
+            _id: generateSHA256(
+                new Date().getTime().toString() + title + author
+            ),
             title,
-            author: "Test1",
+            author,
             date,
             body,
-        }).save();
+        };
+
+        Events.push(_newEvent);
 
         // Return the eventID
         return res.status(200).json({
@@ -83,13 +83,12 @@ eventRouter.post("/new", async (req, res) => {
 eventRouter.get("/", async (req, res) => {
     try {
         // Get the page number from request query
-        const page = Number(req.query.page) || 1;
+        // const page = Number(req.query.page) || 1;
+        // console.log(Events);
 
-        // Get the top 5 events from DB
-        const events = await EventModel.find()
-            .sort({ date: -1 })
-            .limit(5)
-            .skip((page - 1) * 5);
+        // Get the top 5 events from array
+        const events = Events;
+        // .slice((page - 1) * 5, page * 5);
 
         return res.status(200).json({
             message: "Top 5 events",
@@ -115,8 +114,14 @@ eventRouter.get("/:eventID", async (req, res) => {
         // Get the eventID from request params
         const { eventID } = req.params;
 
-        // Get the event from DB
-        const eventData = await EventModel.findById(eventID);
+        // Get the event from array
+        const eventData = Events.find((event) => event._id === eventID);
+
+        if (!eventData) {
+            return res.status(404).json({
+                message: "Event not found",
+            });
+        }
 
         // Return the event data
         return res.status(200).json({
@@ -144,8 +149,11 @@ eventRouter.delete("/:eventID", async (req, res) => {
         // Get the eventID from request params
         const { eventID } = req.params;
 
-        // Delete the event from DB
-        const _deletedEvent = await EventModel.findByIdAndDelete(eventID);
+        // Delete the event from array
+        const index = Events.findIndex((obj) => obj._id === eventID);
+        if (index !== -1) {
+            Events.splice(index, 1);
+        }
 
         // Return the event data
         return res.status(200).json({

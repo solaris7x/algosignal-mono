@@ -1,26 +1,10 @@
-import mongoose, { Schema } from "mongoose";
+export interface EventModel {
+    _id: string;
+    title: string;
+    author: string;
+    date: Date;
+    body: string;
+}
 
-const EventModelSchema = new Schema(
-    {
-        title: {
-            type: String,
-            required: true,
-        },
-        author: {
-            type: String,
-            required: true,
-        },
-        date: {
-            type: Date,
-            required: true,
-        },
-        body: {
-            type: String,
-            required: true,
-        },
-    },
-    { timestamps: true }
-);
-
-const EventModel = mongoose.model("Events", EventModelSchema);
-export default EventModel;
+const Events: EventModel[] = [];
+export default Events;

@@ -39,7 +39,7 @@ const App = () => {
     setUserInfo(userInfo);
   };
 
-  console.log(userInfo);
+  // console.log(userInfo);
 
   // Persist auth state with local storage
   useEffect(() => {

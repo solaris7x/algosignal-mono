@@ -1,20 +1,10 @@
-import mongoose, { Schema } from "mongoose";
+export interface UserModel {
+    username: string;
+    email: string;
+    passwordHash: string;
+}
 
-const UserModelSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    passwordHash: {
-        type: String,
-        required: true,
-    },
-});
+const Users: UserModel[] = [];
 
-const UserModel = mongoose.model("Users", UserModelSchema);
-export default UserModel;
+// const UserModel = mongoose.model("Users", UserModelSchema);
+export default Users;
